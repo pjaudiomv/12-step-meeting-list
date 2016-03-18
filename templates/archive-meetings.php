@@ -1,19 +1,16 @@
 <?php
 
 //get assets for page
-tsml_assets();
+tsml_assets('public');
 
 get_header();
 
 //parse query string
-$search	= isset($_GET['sq']) ? sanitize_text_field($_GET['sq']) : null;
-$region	= isset($_GET['r']) && array_key_exists($_GET['r'], $tsml_regions) ? $_GET['r'] : null;
-$type	= isset($_GET['t']) && array_key_exists($_GET['t'], $tsml_types[$tsml_program]) ? $_GET['t'] : null;
-$time	= isset($_GET['i']) ? sanitize_text_field(strtolower($_GET['i'])) : null;
-$view	= (isset($_GET['v']) && $_GET['v'] == 'map') ? 'map' : 'list';
-
-//need later
-$times  = array(
+$search		= isset($_GET['sq']) ? sanitize_text_field($_GET['sq']) : null;
+$region     = isset($_GET['r']) ? intval($_GET['r']) : null;
+$types		= isset($_GET['t']) ? array_values(array_intersect(array_keys($tsml_types[$tsml_program]), explode('-', $_GET['t']))) : array();
+$time		= isset($_GET['i']) ? sanitize_text_field(strtolower($_GET['i'])) : null;
+$times		= array(
 	'morning' => 'Morning',
 	'day' => 'Day',
 	'evening' => 'Evening',
@@ -35,14 +32,16 @@ $time_default = 'Any Time';
 $time_label = $time ? $times[$time] : $time_default;
 $region_default = 'Everywhere';
 $region_label = ($region && array_key_exists($region, $tsml_regions)) ? $tsml_regions[$region] : $region_default;
-$type_default = 'Any Type';
-$type_label = ($type && array_key_exists($type, $tsml_types[$tsml_program])) ? $tsml_types[$tsml_program][$type] : $type_default;
+$types_default = 'Meeting Type';
+$types_count = count($types);
+$types_label = $types_count ? $types_default . ' [' . $types_count . ']': $types_default;
+if ($types_count == 1) $types_label = $tsml_types[$tsml_program][$types[0]];
 
 //need this later
 $locations	= array();
 
 //run query
-$meetings	= tsml_get_meetings(compact('search', 'day', 'time', 'region', 'type'));
+$meetings	= tsml_get_meetings(compact('search', 'day', 'time', 'region', 'types'));
 //dd($meetings);
 
 class Walker_Regions_Dropdown extends Walker_Category {
@@ -56,8 +55,8 @@ class Walker_Regions_Dropdown extends Walker_Category {
 }
 
 ?>
-<div id="meetings" data-type="<?php echo $view?>" class="container">
-	<div class="row controls hidden-print">
+<div id="meetings" data-type="list" class="container">
+	<div class="row controls">
 		<div class="col-md-2 col-sm-6">
 			<form id="search">
 				<div class="input-group">
@@ -122,18 +121,16 @@ class Walker_Regions_Dropdown extends Walker_Category {
 		</div>
 		<div class="col-md-2 col-sm-6">
 			<?php if (count($tsml_types_in_use)) {?>
-			<div class="dropdown" id="type">
+			<div class="dropdown" id="types">
 				<a data-toggle="dropdown" class="btn btn-default btn-block">
-					<span class="selected"><?php echo $type_label?></span>
+					<span class="selected"><?php echo $types_label?></span>
 					<span class="caret"></span>
 				</a>
 				<ul class="dropdown-menu">
-					<li<?php if (empty($type)) echo ' class="active"'?>><a href="#"><?php echo $type_default?></a></li>
-					<li class="divider"></li>
 					<?php 
 					$types_to_list = array_intersect_key($tsml_types[$tsml_program], array_flip($tsml_types_in_use));
-					foreach ($types_to_list as $key=>$thistype) {?>
-					<li<?php if ($key == $type) echo ' class="active"'?>><a href="#" data-id="<?php echo $key?>"><?php echo $thistype?></a></li>
+					foreach ($types_to_list as $key=>$type) {?>
+					<li<?php if (in_array($key, $types)) echo ' class="active"'?>><a href="#" data-id="<?php echo $key?>"><?php echo $type?></a></li>
 					<?php } ?>
 				</ul>
 			</div>
@@ -167,12 +164,12 @@ class Walker_Regions_Dropdown extends Walker_Category {
 			
 			<div id="table-wrapper">
 				<table class="table table-striped<?php if (!count($meetings)) {?> hidden<?php }?>">
-					<thead class="hidden-print">
+					<thead>
 						<th class="time">Time</th>
 						<th class="name">Meeting</th>
-						<th class="location">Location</th>
+						<!-- th class="location">Location</th -->
 						<th class="address">Address</th>
-						<th class="region">Region</th>
+						<!-- th class="region">Region</th -->
 					</thead>
 					<tbody>
 						<?php
@@ -181,18 +178,15 @@ class Walker_Regions_Dropdown extends Walker_Category {
 							$meeting['location'] = htmlentities($meeting['location'], ENT_QUOTES);
 							$meeting['address'] = htmlentities($meeting['address'], ENT_QUOTES);
 							$meeting['city'] = htmlentities($meeting['city'], ENT_QUOTES);
-							$meeting['region'] = (!empty($meeting['sub_region'])) ? htmlentities($meeting['sub_region'], ENT_QUOTES) : htmlentities($meeting['region'], ENT_QUOTES);
-							$meeting['link'] = tsml_link($meeting['url'], tsml_format_name($meeting['name'], $meeting['types']), 'post_type');
-							
+
 							if (!isset($locations[$meeting['location_id']])) {
 								$locations[$meeting['location_id']] = array(
-									'name' => $meeting['location'],
-									'latitude' => $meeting['latitude'] - 0,
-									'longitude' => $meeting['longitude'] - 0,
-									'link' => tsml_link($meeting['location_url'], $meeting['location'], 'post_type'),
-									'address' => $meeting['address'],
-									'city_state' => $meeting['city'] . ', ' . $meeting['state'],
-									'meetings' => array(),
+									'name'=>$meeting['location'],
+									'coords'=>$meeting['latitude'] . ',' . $meeting['longitude'],
+									'url'=>$meeting['location_url'],
+									'address'=>$meeting['address'],
+									'city_state'=>$meeting['city'] . ', ' . $meeting['state'],
+									'meetings'=>array(),
 								);
 							}
 		
@@ -200,7 +194,7 @@ class Walker_Regions_Dropdown extends Walker_Category {
 								'time'=>$meeting['time_formatted'],
 								'day'=>$meeting['day'],
 								'name'=>$meeting['name'],
-								'link'=>$meeting['link'],
+								'url'=>$meeting['url'],
 								'types'=>$meeting['types'],
 							);
 
@@ -220,17 +214,13 @@ class Walker_Regions_Dropdown extends Walker_Category {
 								}
 								?></td>
 							<td class="name">
-								<?php echo $meeting['link']?>
-								<div class="visible-print-block"><?php echo $meeting['region']?></div>
+							    <?php echo tsml_link($meeting['url'], tsml_format_name($meeting['name'], $meeting['types']), 'post_type')?><br>
+							    <?php echo $meeting['location']?>
 							</td>
-							<td class="location">
-								<?php echo $meeting['location']?>
-								<?php if ($meeting['location'] != $meeting['address']) {?>
-								<div class="visible-print-block"><?php echo $meeting['address']?></div>
-								<?php }?>
+							<td class="address">
+							    <?php echo $meeting['address']?><br>
+							    <?php echo $meeting['region']?> (<?php echo $meeting['city']?>)
 							</td>
-							<td class="address hidden-print"><?php echo $meeting['address']?></td>
-							<td class="region hidden-print"><?php echo $meeting['region']?></td>
 						</tr>
 						<?php }?>
 					</tbody>
@@ -241,11 +231,68 @@ class Walker_Regions_Dropdown extends Walker_Category {
 </div>
 
 <script>
-jQuery(document).ready(function($) {
-	var locations = <?php echo json_encode($locations)?>;
-	loadMap(locations);
+
+jQuery(function(){
+
+	//set some globals
+	markers = [];
+	infowindow = new google.maps.InfoWindow();
+	map = new google.maps.Map(document.getElementById('map'), {
+		panControl: false,
+		mapTypeControl: false,
+		mapTypeControlOptions: {
+			mapTypeIds: [google.maps.MapTypeId.ROADMAP, 'map_style']
+		}
+	});
+	bounds = new google.maps.LatLngBounds();				
+
+	<?php 
+	foreach ($locations as $location) {
+		
+		//group location's meetings by day
+		$location_days = array();
+		foreach ($location['meetings'] as $meeting) {
+			if (!array_key_exists($meeting['day'], $location_days)) $location_days[$meeting['day']] = array();
+			$location_days[$meeting['day']][] = $meeting;
+		}
+		$infowindow = '<div class="infowindow"><h3>' . tsml_link($location['url'], $location['name'], 'post_type') . '</h3>';
+		$infowindow .= '<address>' . $location['address'] . '<br>' . $location['city_state'] . '</address>';
+		foreach ($location_days as $location_day=>$meetings) {
+			$infowindow .= '<h5>' . $tsml_days[$location_day] . '</h5><dl>';
+			foreach ($meetings as $meeting) {
+				$infowindow .= '<dt>' . $meeting['time'] . '</dt>';
+				$infowindow .= '<dd>' . tsml_link($meeting['url'], tsml_format_name($meeting['name'], $meeting['types']), 'post_type') . '</dd>';
+			}
+			$infowindow .= '</dl>';
+		}
+		$infowindow .= '</div>';
+		?>
+		var marker = new google.maps.Marker({
+		    position: new google.maps.LatLng(<?php echo $location['coords']?>),
+		    map: map,
+		    title: "<?php echo $location['name']?>"
+		});
+
+		//add infowindow event
+		google.maps.event.addListener(marker, 'click', (function(marker) {
+			return function() {
+				infowindow.setContent('<?php echo $infowindow?>');
+				infowindow.open(map, marker);
+			}
+		})(marker));					
+
+		//add to map bounds
+		bounds.extend(marker.position);
+
+		//save marker so it can be removed later
+		markers[markers.length] = marker;
+	<?php }?>
+
+	map.fitBounds(bounds);
 });
+
 </script>
 
 <?php
 get_footer();
+?>
