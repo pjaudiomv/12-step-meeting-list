@@ -133,10 +133,10 @@ jQuery(function($){
 					//add new table row
 					tbody.append('<tr>' + 
 						'<td class="time">' + (data.day || !obj.day ? obj.time_formatted : days[obj.day] + ', ' + obj.time_formatted) + '</td>' + 
-						'<td class="name"><a href="' + obj.url + '">' + highlight(obj.name, search) + '</a><div class="visible-print-block">' + (obj.sub_region || obj.region || '') + '</div></td>' + 
-						'<td class="location">' + highlight(obj.location, search) + '<div class="visible-print-block">' + highlight(obj.address, search) + '</div></td>' + 
-						'<td class="address hidden-print">' + highlight(obj.address, search) + '</td>' + 
-						'<td class="region hidden-print">' + (obj.sub_region || obj.region || '') + '</td>' + 
+						'<td class="name"><a href="' + obj.url + '">' + highlight(obj.name, search) + '</a><div class="visible-print-block">' + (obj.sub_region || obj.region || '') + '</div><br>' + 
+						'' + highlight(obj.location, search) + '<div class="visible-print-block">' + highlight(obj.address, search) + '</div></td>' + 
+						'<td class="address hidden-print">' + highlight(obj.address, search) + '<br>' + 
+						'' + (obj.sub_region || obj.region || '') + '</td>' + 
 					'</tr>')
 				});
 
