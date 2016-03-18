@@ -136,7 +136,7 @@ jQuery(function($){
 						'<td class="name"><a href="' + obj.url + '">' + highlight(obj.name, search) + '</a><div class="visible-print-block">' + (obj.sub_region || obj.region || '') + '</div><br>' + 
 						'' + highlight(obj.location, search) + '<div class="visible-print-block">' + highlight(obj.address, search) + '</div></td>' + 
 						'<td class="address hidden-print">' + highlight(obj.address, search) + '<br>' + 
-						'' + (obj.sub_region || obj.region || '') + '</td>' + 
+						'' + (obj.sub_region || obj.region || '') + ' (' + (obj.city) + ')</td>' + 
 					'</tr>')
 				});
 
