@@ -1,0 +1,27 @@
+[Sun Oct 19 16:14:01.266345 2025] [ssl:warn] [pid 1] AH01882: Init: this version of mod_ssl was compiled against a newer library (OpenSSL 3.0.13 30 Jan 2024 (OpenSSL 3.0.11 19 Sep 2023), version currently loaded is 0x300000B0) - may result in undefined or erroneous behavior
+[Sun Oct 19 16:14:01.271513 2025] [ssl:warn] [pid 1] AH01909: 172.20.0.3:443:0 server certificate does NOT include an ID which matches the server name
+AH00558: apache2: Could not reliably determine the server's fully qualified domain name, using 172.20.0.3. Set the 'ServerName' directive globally to suppress this message
+[Sun Oct 19 16:14:01.353204 2025] [ssl:warn] [pid 1] AH01882: Init: this version of mod_ssl was compiled against a newer library (OpenSSL 3.0.13 30 Jan 2024 (OpenSSL 3.0.11 19 Sep 2023), version currently loaded is 0x300000B0) - may result in undefined or erroneous behavior
+[Sun Oct 19 16:14:01.354094 2025] [ssl:warn] [pid 1] AH01909: 172.20.0.3:443:0 server certificate does NOT include an ID which matches the server name
+[Sun Oct 19 16:14:01.357064 2025] [mpm_prefork:notice] [pid 1] AH00163: Apache/2.4.59 (Debian) PHP/8.1.28 OpenSSL/3.0.11 configured -- resuming normal operations
+[Sun Oct 19 16:14:01.357184 2025] [core:notice] [pid 1] AH00094: Command line: 'apache2 -D FOREGROUND'
+[Sun Oct 19 16:15:09.507882 2025] [mpm_prefork:notice] [pid 1] AH00170: caught SIGWINCH, shutting down gracefully
+[Sun Oct 19 16:16:48.262383 2025] [ssl:warn] [pid 1] AH01882: Init: this version of mod_ssl was compiled against a newer library (OpenSSL 3.0.13 30 Jan 2024 (OpenSSL 3.0.11 19 Sep 2023), version currently loaded is 0x300000B0) - may result in undefined or erroneous behavior
+[Sun Oct 19 16:16:48.264059 2025] [ssl:warn] [pid 1] AH01909: 172.20.0.3:443:0 server certificate does NOT include an ID which matches the server name
+AH00558: apache2: Could not reliably determine the server's fully qualified domain name, using 172.20.0.3. Set the 'ServerName' directive globally to suppress this message
+[Sun Oct 19 16:16:48.281581 2025] [ssl:warn] [pid 1] AH01882: Init: this version of mod_ssl was compiled against a newer library (OpenSSL 3.0.13 30 Jan 2024 (OpenSSL 3.0.11 19 Sep 2023), version currently loaded is 0x300000B0) - may result in undefined or erroneous behavior
+[Sun Oct 19 16:16:48.282905 2025] [ssl:warn] [pid 1] AH01909: 172.20.0.3:443:0 server certificate does NOT include an ID which matches the server name
+[Sun Oct 19 16:16:48.285899 2025] [mpm_prefork:notice] [pid 1] AH00163: Apache/2.4.59 (Debian) PHP/8.1.28 OpenSSL/3.0.11 configured -- resuming normal operations
+[Sun Oct 19 16:16:48.286070 2025] [core:notice] [pid 1] AH00094: Command line: 'apache2 -D FOREGROUND'
+[Sun Oct 19 16:17:10.868236 2025] [mpm_prefork:notice] [pid 1] AH00170: caught SIGWINCH, shutting down gracefully
+[Sun Oct 19 16:18:33.690137 2025] [ssl:warn] [pid 1:tid 1] AH01909: 172.20.0.3:443:0 server certificate does NOT include an ID which matches the server name
+AH00558: apache2: Could not reliably determine the server's fully qualified domain name, using 172.20.0.3. Set the 'ServerName' directive globally to suppress this message
+[Sun Oct 19 16:18:33.716049 2025] [ssl:warn] [pid 1:tid 1] AH01909: 172.20.0.3:443:0 server certificate does NOT include an ID which matches the server name
+[Sun Oct 19 16:18:33.719558 2025] [mpm_prefork:notice] [pid 1:tid 1] AH00163: Apache/2.4.65 (Debian) PHP/8.3.26 OpenSSL/3.5.1 configured -- resuming normal operations
+[Sun Oct 19 16:18:33.719690 2025] [core:notice] [pid 1:tid 1] AH00094: Command line: 'apache2 -D FOREGROUND'
+[Sun Oct 19 16:18:55.051907 2025] [mpm_prefork:notice] [pid 1:tid 1] AH00170: caught SIGWINCH, shutting down gracefully
+[Sun Oct 19 16:20:38.829227 2025] [ssl:warn] [pid 1:tid 1] AH01909: 172.18.0.3:443:0 server certificate does NOT include an ID which matches the server name
+AH00558: apache2: Could not reliably determine the server's fully qualified domain name, using 172.18.0.3. Set the 'ServerName' directive globally to suppress this message
+[Sun Oct 19 16:20:38.851096 2025] [ssl:warn] [pid 1:tid 1] AH01909: 172.18.0.3:443:0 server certificate does NOT include an ID which matches the server name
+[Sun Oct 19 16:20:38.854182 2025] [mpm_prefork:notice] [pid 1:tid 1] AH00163: Apache/2.4.65 (Debian) PHP/8.3.26 OpenSSL/3.5.1 configured -- resuming normal operations
+[Sun Oct 19 16:20:38.854310 2025] [core:notice] [pid 1:tid 1] AH00094: Command line: 'apache2 -D FOREGROUND'

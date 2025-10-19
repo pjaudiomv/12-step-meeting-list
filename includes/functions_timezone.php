@@ -21,6 +21,24 @@ function tsml_timezone_is_valid($timezone)
  */
 function tsml_timezone_select($selected = null)
 {
+    global $wpdb, $tsml_timezone;
+
+    // Get currently used timezones from locations
+    $used_timezones = $wpdb->get_col("
+        SELECT DISTINCT meta_value
+        FROM {$wpdb->postmeta} pm
+        INNER JOIN {$wpdb->posts} p ON p.ID = pm.post_id
+        WHERE pm.meta_key = 'timezone'
+        AND pm.meta_value != ''
+        AND p.post_type = 'tsml_location'
+        AND p.post_status IN ('publish', 'draft')
+    ");
+
+    // Add the global timezone if set and not already in used list
+    if (!empty($tsml_timezone) && !in_array($tsml_timezone, $used_timezones)) {
+        array_unshift($used_timezones, $tsml_timezone);
+    }
+
     $continents = [];
     foreach (DateTimeZone::listIdentifiers() as $timezone) {
         $count_slashes = substr_count($timezone, '/');
@@ -36,7 +54,19 @@ function tsml_timezone_select($selected = null)
     $continents['UTC'] = ['UTC' => 'UTC'];
     ?>
     <select name="timezone" id="timezone">
-        <option value="" <?php selected($timezone, null) ?>></option>
+        <option value="" <?php selected('', $selected) ?>></option>
+        <?php if (!empty($used_timezones)) { ?>
+            <optgroup label="<?php esc_attr_e('Currently In Use', '12-step-meeting-list') ?>">
+                <?php foreach ($used_timezones as $timezone) {
+                    if (empty($timezone)) continue;
+                    $display_name = str_replace('_', ' ', str_replace('/', ' - ', explode('/', $timezone, 2)[1] ?? $timezone));
+                ?>
+                    <option value="<?php echo esc_attr($timezone) ?>" <?php selected($timezone, $selected) ?>>
+                        <?php echo esc_html($display_name) ?>
+                    </option>
+                <?php } ?>
+            </optgroup>
+        <?php } ?>
         <?php foreach ($continents as $continent => $cities) { ?>
             <optgroup label="<?php echo esc_attr($continent) ?>">
                 <?php foreach ($cities as $timezone => $city) { ?>

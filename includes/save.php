@@ -23,7 +23,7 @@ add_filter('wp_insert_post_data', function ($post) {
 
 // handle all the metadata, location
 add_action('post_updated', function ($post_id, $post, $post_before) {
-    global $tsml_nonce, $wpdb, $tsml_notification_addresses, $tsml_days, $tsml_contact_fields;
+    global $tsml_nonce, $wpdb, $tsml_notification_addresses, $tsml_days, $tsml_contact_fields, $tsml_timezone;
 
     // security
     if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) {
@@ -271,6 +271,9 @@ add_action('post_updated', function ($post_id, $post, $post_before) {
         } else {
             update_post_meta($location_id, 'timezone', $_POST['timezone']);
         }
+    } elseif (empty($old_meeting->timezone) && empty($_POST['timezone']) && !empty($tsml_timezone) && tsml_timezone_is_valid($tsml_timezone)) {
+        // Set default timezone for new meetings when no timezone is set
+        update_post_meta($location_id, 'timezone', $tsml_timezone);
     }
 
     // set parent on this post (or all meetings at location) without re-triggering the save_posts hook (update 7/25/17: removing post_status from this)

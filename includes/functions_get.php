@@ -213,6 +213,7 @@ function tsml_get_location($location_id = false)
  */
 function tsml_get_locations()
 {
+    global $tsml_timezone;
     $locations = [];
 
     // get all regions with parents, need for sub_region below
@@ -251,7 +252,7 @@ function tsml_get_locations()
             'approximate' => empty($location_meta[$post->ID]['approximate']) ? null : $location_meta[$post->ID]['approximate'],
             'latitude' => empty($location_meta[$post->ID]['latitude']) ? null : $location_meta[$post->ID]['latitude'],
             'longitude' => empty($location_meta[$post->ID]['longitude']) ? null : $location_meta[$post->ID]['longitude'],
-            'timezone' => empty($location_meta[$post->ID]['timezone']) ? null : $location_meta[$post->ID]['timezone'],
+            'timezone' => empty($location_meta[$post->ID]['timezone']) ? $tsml_timezone : $location_meta[$post->ID]['timezone'],
             'region_id' => $region_id,
             'region' => $region,
             'sub_region' => $sub_region,

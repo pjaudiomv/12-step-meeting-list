@@ -332,10 +332,14 @@ add_action('admin_init', function () {
             <label for="timezone">
                 <?php esc_html_e('Timezone', '12-step-meeting-list') ?>
             </label>
-            <?php tsml_timezone_select(@$location->timezone) ?>
+            <?php
+                // Use location timezone, or fallback to global timezone for new meetings
+                $selected_timezone = !empty($location->timezone) ? $location->timezone : $tsml_timezone;
+                tsml_timezone_select($selected_timezone);
+            ?>
         </div>
 
-        <?php if (empty($location->timezone) && empty($tsml_timezone) && $tsml_user_interface === 'tsml_ui') { ?>
+        <?php if (empty($location->timezone) && empty($tsml_timezone)) { ?>
             <div class="meta_form_separator">
                 <p>
                     <?php esc_html_e('Because your site does not have a default timezone set, a timezone must be selected here for the meeting to appear on the meeting finder page.', '12-step-meeting-list') ?>
