@@ -28,7 +28,7 @@ tsml_header();
 <div id="tsml">
     <div id="location" class="container">
         <div class="row">
-            <div class="col-md-10 col-md-offset-1 main">
+            <div class="col-md-10 offset-md-1 main">
 
                 <div class="page-header">
                     <h1>
@@ -36,7 +36,7 @@ tsml_header();
                     </h1>
                     <div>
                         <a href="<?php echo esc_url(tsml_link_url(tsml_meetings_url(), 'tsml_location')) ?>">
-                            <em class="glyphicon glyphicon-chevron-right"></em>
+                            <?php tsml_icon('chevron-right') ?>
                             <?php esc_html_e('Back to Meetings', '12-step-meeting-list') ?>
                         </a>
                     </div>
@@ -45,22 +45,22 @@ tsml_header();
                 <div class="row location">
                     <div class="col-md-4">
                         <?php if ($location->approximate !== 'yes') { ?>
-                            <div class="panel panel-default">
-                                <a class="panel-heading tsml-directions"
+                            <div class="card">
+                                <a class="card-header tsml-directions"
                                     data-latitude="<?php echo esc_attr($location->latitude) ?>"
                                     data-longitude="<?php echo esc_attr($location->longitude) ?>"
                                     data-location="<?php echo esc_attr($location->post_title) ?>">
                                     <h3 class="panel-title">
                                         <?php esc_html_e('Get Directions', '12-step-meeting-list') ?>
                                         <span class="panel-title-buttons">
-                                            <span class="glyphicon glyphicon-share-alt"></span>
+                                            <?php tsml_icon('directions') ?>
                                         </span>
                                     </h3>
                                 </a>
                             </div>
                         <?php } ?>
 
-                        <div class="panel panel-default">
+                        <div class="card">
                             <ul class="list-group">
                                 <li class="list-group-item list-group-item-address">
                                     <p class="notranslate">
@@ -139,7 +139,7 @@ tsml_header();
                         </div>
                     </div>
                     <div class="col-md-8">
-                        <div id="map" class="panel panel-default"></div>
+                        <div id="map" class="card"></div>
                     </div>
                 </div>
 

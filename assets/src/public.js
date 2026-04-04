@@ -81,7 +81,7 @@ jQuery(function ($) {
 	});
 
 	//expand region select
-	$('.panel-expandable').on('click', '.panel-heading', function (e) {
+	$('.panel-expandable').on('click', '.card-header', function (e) {
 		$(this).closest('.panel-expandable').toggleClass('expanded');
 		if (tsml.debug) console.log('.panel-expandable toggling');
 	});
@@ -91,10 +91,10 @@ jQuery(function ($) {
 		onfocusout: false,
 		onkeyup: function (element) {},
 		highlight: function (element, errorClass, validClass) {
-			$(element).parent().addClass('has-error');
+			$(element).parent().addClass('is-invalid');
 		},
 		unhighlight: function (element, errorClass, validClass) {
-			$(element).parent().removeClass('has-error');
+			$(element).parent().removeClass('is-invalid');
 		},
 		errorPlacement: function (error, element) {
 			return; //don't show message on page, simply highlight
@@ -108,7 +108,7 @@ jQuery(function ($) {
 				$feedback.find('.list-group').html('<li class="list-group-item has-info">' + data + '</li>');
 			}).fail(function (response) {
 				$form.removeClass('running');
-				$feedback.find('.list-group').html('<li class="list-group-item has-error">' + tsml.strings.email_not_sent + '</li>');
+				$feedback.find('.list-group').html('<li class="list-group-item is-invalid">' + tsml.strings.email_not_sent + '</li>');
 			});
 			$form.addClass('running');
 			return false;
@@ -165,14 +165,14 @@ jQuery(function ($) {
 				//change icon & enable or disable
 				if ($(this).attr('data-id') == 'search') {
 					$search_field.prop('disabled', false);
-					$('#search button i').removeClass().addClass('glyphicon glyphicon-search');
+					$('#search button .tsml-mode-icon').html(tsml.icons.search);
 				} else if ($(this).attr('data-id') == 'location') {
 					$search_field.prop('disabled', false);
-					$('#search button i').removeClass().addClass('glyphicon glyphicon-map-marker');
+					$('#search button .tsml-mode-icon').html(tsml.icons.location);
 					setAlert('loc_thinking');
 				} else if ($(this).attr('data-id') == 'me') {
 					$search_field.prop('disabled', true);
-					$('#search button i').removeClass().addClass('glyphicon glyphicon-user');
+					$('#search button .tsml-mode-icon').html(tsml.icons.person);
 					setAlert('geo_thinking');
 				}
 
@@ -383,7 +383,7 @@ jQuery(function ($) {
 
 			if (controls.query) {
 				//start spinner
-				$('#search button i').removeClass().addClass('glyphicon glyphicon-refresh spinning');
+				$('#search button .tsml-mode-icon').html(tsml.icons.refresh).find('svg').addClass('spinning');
 
 				//geocode the address
 				$.getJSON(
@@ -395,7 +395,7 @@ jQuery(function ($) {
 					},
 					function (geocoded) {
 						if (tsml.debug) console.log('doSearch() location geocoded', geocoded);
-						$('#search button i').removeClass().addClass('glyphicon glyphicon-map-marker');
+						$('#search button .tsml-mode-icon').html(tsml.icons.location);
 						if (geocoded.status == 'error') {
 							//show error message
 							removeSearchMarker(); //clear marker if it exists
@@ -423,12 +423,12 @@ jQuery(function ($) {
 			}
 
 			//start spinner
-			$('#search button i').removeClass().addClass('glyphicon glyphicon-refresh spinning');
+			$('#search button .tsml-mode-icon').html(tsml.icons.refresh).find('svg').addClass('spinning');
 
 			if (navigator.geolocation) {
 				navigator.geolocation.getCurrentPosition(
 					function (pos) {
-						$('#search button i').removeClass().addClass('glyphicon glyphicon-user');
+						$('#search button .tsml-mode-icon').html(tsml.icons.person);
 						controls.latitude = pos.coords.latitude;
 						controls.longitude = pos.coords.longitude;
 						searchLocation = {
@@ -440,7 +440,7 @@ jQuery(function ($) {
 					function () {
 						//browser supports but can't get geolocation
 						if (tsml.debug) console.log('doSearch() didnt get location');
-						$('#search button i').removeClass().addClass('glyphicon glyphicon-user'); //todo switch to location
+						$('#search button .tsml-mode-icon').html(tsml.icons.person); //todo switch to location
 						removeSearchMarker();
 						setAlert('geo_error');
 					},
@@ -453,7 +453,7 @@ jQuery(function ($) {
 			} else {
 				//browser doesn't support geolocation
 				if (tsml.debug) console.log('doSearch() no browser support for geo');
-				$('#search button i').removeClass().addClass('glyphicon glyphicon-user'); //todo switch to location
+				$('#search button .tsml-mode-icon').html(tsml.icons.person); //todo switch to location
 				removeSearchMarker();
 				setAlert('geo_error_browser');
 			}
@@ -826,9 +826,9 @@ jQuery(function ($) {
 	//set or clear the alert message
 	function setAlert(message_key) {
 		if (typeof message_key == 'undefined') {
-			$('#alert').html('').addClass('hidden');
+			$('#alert').html('').addClass('d-none');
 		} else {
-			$('#alert').html(tsml.strings[message_key]).removeClass('hidden');
+			$('#alert').html(tsml.strings[message_key]).removeClass('d-none');
 		}
 	}
 
@@ -885,14 +885,14 @@ jQuery(function ($) {
 		var selected_day = $('#day li.active a').first().attr('data-id');
 		var selected_time = $('#time li.active a').first().attr('data-id');
 		if (current_day != selected_day) {
-			$('#time li.upcoming').addClass('hidden');
+			$('#time li.upcoming').addClass('d-none');
 			if (selected_time == 'upcoming') {
 				$('#time li.active').removeClass('active');
 				$('#time li').first().addClass('active');
 				$('#time span.selected').html($('#time li a').first().text());
 			}
 		} else {
-			$('#time li.upcoming').removeClass('hidden');
+			$('#time li.upcoming').removeClass('d-none');
 		}
 	}
 

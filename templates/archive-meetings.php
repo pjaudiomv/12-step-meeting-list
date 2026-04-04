@@ -5,12 +5,12 @@ tsml_assets();
 
 // define search dropdown options
 $modes = [
-    'search' => ['title' => __('Search', '12-step-meeting-list'), 'icon' => 'glyphicon glyphicon-search'],
-    'location' => ['title' => __('Near Location', '12-step-meeting-list'), 'icon' => 'glyphicon glyphicon-map-marker'],
+    'search' => ['title' => __('Search', '12-step-meeting-list'), 'icon' => 'search'],
+    'location' => ['title' => __('Near Location', '12-step-meeting-list'), 'icon' => 'location'],
 ];
 // proximity only enabled over SSL
 if (is_ssl()) {
-    $modes['me'] = ['title' => __('Near Me', '12-step-meeting-list'), 'icon' => 'glyphicon glyphicon-user'];
+    $modes['me'] = ['title' => __('Near Me', '12-step-meeting-list'), 'icon' => 'person'];
 }
 
 // define distance dropdown
@@ -314,7 +314,7 @@ tsml_header();
         class="container<?php if (!count($meetings)) { ?> empty<?php } ?>" role="main">
 
         <div class="row title">
-            <div class="col-xs-12">
+            <div class="col-12">
                 <div class="page-header">
                     <h1>
                         <?php echo esc_html($tsml_page_title) ?>
@@ -329,24 +329,23 @@ tsml_header();
             </div>
         <?php } ?>
 
-        <div class="row controls hidden-print">
+        <div class="row controls d-print-none">
             <div class="col-sm-6 col-md-2 control-search">
                 <form id="search" role="search" action=".">
                     <div class="input-group">
                         <input type="search" name="query" class="form-control" value="<?php echo esc_attr($query) ?>"
                             placeholder="<?php echo esc_attr($mode_label) ?>" aria-label="Search" <?php echo ($mode == 'me') ? 'disabled' : '' ?>>
-                        <div class="input-group-btn" id="mode">
-                            <button class="btn btn-default" data-toggle="tsml-dropdown" type="button">
-                                <i class="<?php echo esc_attr($modes[$mode]['icon']) ?>"></i>
-                                <span class="caret"></span>
+                        <div id="mode">
+                            <button class="btn btn-secondary dropdown-toggle" data-toggle="tsml-dropdown" type="button">
+                                <span class="tsml-mode-icon"><?php tsml_icon($modes[$mode]['icon']) ?></span>
                             </button>
-                            <ul class="dropdown-menu dropdown-menu-right">
+                            <ul class="dropdown-menu dropdown-menu-end">
                                 <?php foreach ($modes as $key => $value) { ?>
                                     <li class="<?php echo esc_attr($key);
                                     if ($mode == $key) {
                                         echo ' active';
                                     }
-                                    ?>"><a data-id="<?php echo esc_attr($key) ?>">
+                                    ?>"><a class="dropdown-item" data-id="<?php echo esc_attr($key) ?>">
                                             <?php echo esc_html($value['title']) ?>
                                         </a></li>
                                 <?php } ?>
@@ -356,51 +355,50 @@ tsml_header();
                     <input type="submit">
                 </form>
             </div>
-            <div class="col-sm-6 col-md-2 col-md-push-8 control-view">
-                <div class="btn-group btn-group-justified" id="action">
-                    <a class="btn btn-default toggle-view<?php if ($view == 'list') { ?> active<?php } ?>"
+            <div class="col-sm-6 col-md-2 order-md-last control-view">
+                <div class="btn-group w-100" id="action">
+                    <a class="btn btn-secondary toggle-view<?php if ($view == 'list') { ?> active<?php } ?>"
                         href="<?php echo esc_attr(tsml_meetings_url(['tsml-view' => 'list'])) ?>" data-id="list"
                         role="button">
                         <?php esc_html_e('List', '12-step-meeting-list') ?>
                     </a>
-                    <a class="btn btn-default toggle-view<?php if ($view == 'map') { ?> active<?php } ?>"
+                    <a class="btn btn-secondary toggle-view<?php if ($view == 'map') { ?> active<?php } ?>"
                         href="<?php echo esc_attr(tsml_meetings_url(['tsml-view' => 'map'])) ?>" data-id="map"
                         role="button">
                         <?php esc_html_e('Map', '12-step-meeting-list') ?>
                     </a>
                 </div>
             </div>
-            <div class="col-sm-6 col-md-2 col-md-pull-2 control-region">
+            <div class="col-sm-6 col-md-2 control-region">
                 <?php if ($regions_dropdown || $districts_dropdown) { ?>
                     <div class="dropdown" id="region">
-                        <a class="btn btn-default btn-block" data-toggle="tsml-dropdown" role="button" aria-haspopup="true"
+                        <a class="btn btn-secondary w-100 dropdown-toggle" data-toggle="tsml-dropdown" role="button" aria-haspopup="true"
                             aria-expanded="false">
                             <span class="selected">
                                 <?php echo esc_html($region_label) ?>
                             </span>
-                            <span class="caret"></span>
                         </a>
                         <ul class="dropdown-menu" role="menu">
                             <li <?php if (empty($region) && empty($district)) { ?> class="active" <?php } ?>>
-                                <a href="#">
+                                <a class="dropdown-item" href="#">
                                     <?php echo esc_html($region_default) ?>
                                 </a>
                             </li>
-                            <li class="divider"></li>
+                            <li><hr class="dropdown-divider"></li>
                             <?php if ($regions_dropdown && $districts_dropdown) { ?>
                                 <li class="region">
-                                    <a class="switch">
+                                    <a class="dropdown-item switch">
                                         <?php esc_html_e('Switch to Districts', '12-step-meeting-list') ?>
                                     </a>
                                 </li>
                                 <li class="district">
-                                    <a class="switch">
+                                    <a class="dropdown-item switch">
                                         <?php esc_html_e('Switch to Regions', '12-step-meeting-list') ?>
                                     </a>
                                 </li>
-                                <li class="divider"></li>
+                                <li><hr class="dropdown-divider"></li>
                             <?php }
-                            $allowed_tags = ['a' => ['href' => [], 'data-id' => []], 'div' => ['class' => []], 'li' => ['class' => []], 'ul' => ['class' => []]];
+                            $allowed_tags = ['a' => ['href' => [], 'class' => [], 'data-id' => []], 'div' => ['class' => []], 'li' => ['class' => []], 'ul' => ['class' => []]];
                             echo wp_kses($regions_dropdown, $allowed_tags);
                             echo wp_kses($districts_dropdown, $allowed_tags);
                             ?>
@@ -408,17 +406,16 @@ tsml_header();
                     </div>
                 <?php } ?>
                 <div class="dropdown" id="distance">
-                    <a class="btn btn-default btn-block" data-toggle="tsml-dropdown" role="button" aria-haspopup="true"
+                    <a class="btn btn-secondary w-100 dropdown-toggle" data-toggle="tsml-dropdown" role="button" aria-haspopup="true"
                         aria-expanded="false">
                         <span class="selected">
                             <?php echo esc_html($distance_label) ?>
                         </span>
-                        <span class="caret"></span>
                     </a>
                     <ul class="dropdown-menu" role="menu">
                         <?php foreach ($distances as $key => $value) { ?>
                             <li <?php if ($key === $distance) { ?> class="active" <?php } ?>>
-                                <a href="<?php esc_attr(tsml_meetings_url(['tsml-distance' => $key])) ?>"
+                                <a class="dropdown-item" href="<?php esc_attr(tsml_meetings_url(['tsml-distance' => $key])) ?>"
                                     data-id="<?php echo esc_attr($key) ?>">
                                     <?php echo esc_html($value) ?>
                                 </a>
@@ -427,25 +424,24 @@ tsml_header();
                     </ul>
                 </div>
             </div>
-            <div class="col-sm-6 col-md-2 col-md-pull-2 control-day">
+            <div class="col-sm-6 col-md-2 control-day">
                 <div class="dropdown" id="day">
-                    <a class="btn btn-default btn-block" data-toggle="tsml-dropdown" role="button" aria-haspopup="true"
+                    <a class="btn btn-secondary w-100 dropdown-toggle" data-toggle="tsml-dropdown" role="button" aria-haspopup="true"
                         aria-expanded="false">
                         <span class="selected">
                             <?php echo esc_html($day_label) ?>
                         </span>
-                        <span class="caret"></span>
                     </a>
                     <ul class="dropdown-menu" role="menu">
                         <li <?php if ($day === null) { ?> class="active" <?php } ?>>
-                            <a href="#">
+                            <a class="dropdown-item" href="#">
                                 <?php echo esc_html($day_default) ?>
                             </a>
                         </li>
-                        <li class="divider"></li>
+                        <li><hr class="dropdown-divider"></li>
                         <?php foreach ($tsml_days as $key => $value) { ?>
                             <li <?php if (intval($key) === $day) { ?> class="active" <?php } ?>>
-                                <a href="<?php echo esc_attr(tsml_meetings_url(['tsml-day' => $key])) ?>"
+                                <a class="dropdown-item" href="<?php echo esc_attr(tsml_meetings_url(['tsml-day' => $key])) ?>"
                                     data-id="<?php echo esc_attr($key) ?>">
                                     <?php echo esc_html($value) ?>
                                 </a>
@@ -454,32 +450,31 @@ tsml_header();
                     </ul>
                 </div>
             </div>
-            <div class="col-sm-6 col-md-2 col-md-pull-2 control-time">
+            <div class="col-sm-6 col-md-2 control-time">
                 <div class="dropdown" id="time">
-                    <a class="btn btn-default btn-block" data-toggle="tsml-dropdown" role="button" aria-haspopup="true"
+                    <a class="btn btn-secondary w-100 dropdown-toggle" data-toggle="tsml-dropdown" role="button" aria-haspopup="true"
                         aria-expanded="false">
                         <span class="selected">
                             <?php echo esc_html($time_label) ?>
                         </span>
-                        <span class="caret"></span>
                     </a>
                     <ul class="dropdown-menu" role="menu">
                         <li <?php if (empty($time)) { ?> class="active" <?php } ?>>
-                            <a href="#">
+                            <a class="dropdown-item" href="#">
                                 <?php echo esc_html($time_default) ?>
                             </a>
                         </li>
-                        <li class="divider upcoming"></li>
+                        <li class="upcoming"><hr class="dropdown-divider"></li>
                         <li class="upcoming<?php if ($time == 'upcoming') { ?> active <?php } ?>">
-                            <a href="<?php echo esc_attr(tsml_meetings_url(['tsml-time' => 'upcoming'])) ?>"
+                            <a class="dropdown-item" href="<?php echo esc_attr(tsml_meetings_url(['tsml-time' => 'upcoming'])) ?>"
                                 data-id="upcoming">
                                 <?php esc_html_e('Upcoming', '12-step-meeting-list') ?>
                             </a>
                         </li>
-                        <li class="divider"></li>
+                        <li><hr class="dropdown-divider"></li>
                         <?php foreach ($times as $key => $value) { ?>
                             <li <?php if ($key === $time) { ?> class="active" <?php } ?>>
-                                <a href="<?php echo esc_attr(tsml_meetings_url(['tsml-time' => $key])) ?>"
+                                <a class="dropdown-item" href="<?php echo esc_attr(tsml_meetings_url(['tsml-time' => $key])) ?>"
                                     data-id="<?php echo esc_attr($key) ?>">
                                     <?php echo esc_html($value) ?>
                                 </a>
@@ -488,25 +483,24 @@ tsml_header();
                     </ul>
                 </div>
             </div>
-            <div class="col-sm-6 col-md-2 col-md-pull-2 control-type">
+            <div class="col-sm-6 col-md-2 control-type">
                 <?php if (count($tsml_types_in_use) && !empty($tsml_programs[$tsml_program]['types'])) { ?>
                     <div class="dropdown" id="type">
-                        <a class="btn btn-default btn-block" data-toggle="tsml-dropdown" role="button" aria-haspopup="true"
+                        <a class="btn btn-secondary w-100 dropdown-toggle" data-toggle="tsml-dropdown" role="button" aria-haspopup="true"
                             aria-expanded="false">
                             <span class="selected">
                                 <?php echo esc_html($type_label) ?>
                             </span>
-                            <span class="caret"></span>
                         </a>
                         <ul class="dropdown-menu" role="menu">
                             <li <?php if (!count($types) && (!count($attendance_options))) { ?> class="active" <?php } ?>>
-                                <a href="#">
+                                <a class="dropdown-item" href="#">
                                     <?php echo esc_html($type_default) ?>
                                 </a>
                             </li>
-                            <li class="divider"></li>
+                            <li><hr class="dropdown-divider"></li>
                             <li <?php if (in_array('active', $attendance_options)) { ?> class="active" <?php } ?>>
-                                <a href="<?php echo esc_attr(tsml_meetings_url(['tsml-attendance_option' => 'active'])) ?>"
+                                <a class="dropdown-item" href="<?php echo esc_attr(tsml_meetings_url(['tsml-attendance_option' => 'active'])) ?>"
                                     data-id="active">Active</a>
                             </li>
                             <?php
@@ -519,14 +513,14 @@ tsml_header();
                                     echo ' class="active"';
                                 }
                                 ?>>
-                                    <a href="<?php echo esc_attr(tsml_meetings_url(['tsml-attendance_option' => $key])) ?>"
+                                    <a class="dropdown-item" href="<?php echo esc_attr(tsml_meetings_url(['tsml-attendance_option' => $key])) ?>"
                                         data-id="<?php echo esc_attr($key) ?>">
                                         <?php echo esc_html($value) ?>
                                     </a>
                                 </li>
                             <?php }
                             ?>
-                            <li class="divider"></li>
+                            <li><hr class="dropdown-divider"></li>
                             <?php
                             $types_to_list = array_intersect_key($tsml_programs[$tsml_program]['types'], array_flip($tsml_types_in_use));
                             foreach ($types_to_list as $key => $thistype) {
@@ -535,7 +529,7 @@ tsml_header();
                                 ?>
                                 <li <?php if (in_array($key, $types))
                                     echo ' class="active"' ?>>
-                                        <a href="<?php echo esc_attr(tsml_meetings_url(['tsml-type' => $key])) ?>"
+                                        <a class="dropdown-item" href="<?php echo esc_attr(tsml_meetings_url(['tsml-type' => $key])) ?>"
                                         data-id="<?php echo esc_attr($key) ?>">
                                         <?php echo esc_html($thistype) ?>
                                     </a>
@@ -547,8 +541,8 @@ tsml_header();
             </div>
         </div>
         <div class="row results">
-            <div class="col-xs-12">
-                <div id="alert" class="alert alert-warning<?php if (empty($message)) { ?> hidden<?php } ?>">
+            <div class="col-12">
+                <div id="alert" class="alert alert-warning<?php if (empty($message)) { ?> d-none<?php } ?>">
                     <?php echo esc_html($message) ?>
                 </div>
 
@@ -556,7 +550,7 @@ tsml_header();
 
                 <div id="table-wrapper">
                     <table class="table table-striped">
-                        <thead class="hidden-print">
+                        <thead class="d-print-none">
                             <tr>
                                 <?php foreach ($tsml_columns as $key => $column) { ?>
                                     <th class="<?php echo esc_attr($key) ?>" <?php if ($tsml_sort_by == $key) { ?>

@@ -129,6 +129,12 @@ function tsml_assets()
             'strings' => $tsml_strings,
             'types' => empty($tsml_programs[$tsml_program]['types']) ? [] : $tsml_programs[$tsml_program]['types'],
             'meeting_id' => isset($post->ID) ? $post->ID : '',
+            'icons' => [
+                'search'   => tsml_icon_html('search'),
+                'location' => tsml_icon_html('location'),
+                'person'   => tsml_icon_html('person'),
+                'refresh'  => tsml_icon_html('refresh'),
+            ],
         ]);
     }
 }
@@ -273,13 +279,46 @@ function tsml_icon($icon)
                 d="M2.667 3.5c-.645 0-1.167.522-1.167 1.167v6.666c0 .645.522 1.167 1.167 1.167h6.666c.645 0 1.167-.522 1.167-1.167V4.667c0-.645-.522-1.167-1.167-1.167H2.667zM.5 4.667C.5 3.47 1.47 2.5 2.667 2.5h6.666c1.197 0 2.167.97 2.167 2.167v6.666c0 1.197-.97 2.167-2.167 2.167H2.667A2.167 2.167 0 0 1 .5 11.333V4.667z" />
             <path
                 d="M11.25 5.65l2.768-1.605a.318.318 0 0 1 .482.263v7.384c0 .228-.26.393-.482.264l-2.767-1.605-.502.865 2.767 1.605c.859.498 1.984-.095 1.984-1.129V4.308c0-1.033-1.125-1.626-1.984-1.128L10.75 4.785l.502.865z" />
+        <?php } elseif ($icon === 'chevron-right') { ?>
+            <path fill-rule="evenodd"
+                d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z" />
+        <?php } elseif ($icon === 'chevron-left') { ?>
+            <path fill-rule="evenodd"
+                d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z" />
+        <?php } elseif ($icon === 'search') { ?>
+            <path
+                d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z" />
+        <?php } elseif ($icon === 'location') { ?>
+            <path
+                d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10zm0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6z" />
+        <?php } elseif ($icon === 'person') { ?>
+            <path
+                d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0zm4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4zm-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.029 10 8 10c-2.029 0-3.516.68-4.168 1.332-.678.678-.83 1.418-.832 1.664h10z" />
+        <?php } elseif ($icon === 'refresh') { ?>
+            <path fill-rule="evenodd"
+                d="M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2v1z" />
+            <path
+                d="M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466z" />
         <?php } ?>
     </svg>
 <?php }
 
 /**
+ * Returns the SVG markup for an icon as a string (for passing to JS).
+ *
+ * @param string $icon
+ * @return string
+ */
+function tsml_icon_html($icon)
+{
+    ob_start();
+    tsml_icon($icon);
+    return ob_get_clean();
+}
+
+/**
  * Used on frontend pages
- * 
+ *
  * @param mixed $link
  * @param mixed $text
  * @param mixed $icon cash|directions|email|link|phone
@@ -288,7 +327,7 @@ function tsml_icon($icon)
 function tsml_icon_button($link, $text, $icon)
 {
     ?>
-    <a href="<?php echo esc_attr($link) ?>" class="btn btn-default btn-block">
+    <a href="<?php echo esc_attr($link) ?>" class="btn btn-secondary w-100">
         <?php tsml_icon($icon) ?>
         <?php echo esc_html($text) ?>
     </a>

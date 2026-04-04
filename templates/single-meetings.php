@@ -39,7 +39,7 @@ tsml_header();
 <div id="tsml">
     <div id="meeting" class="container">
         <div class="row">
-            <div class="col-md-10 col-md-offset-1 main">
+            <div class="col-md-10 offset-md-1 main">
 
                 <div class="page-header">
                     <h1>
@@ -58,7 +58,7 @@ tsml_header();
                         <?php echo esc_html($tsml_meeting_attendance_options[$meeting->attendance_option]) ?>
                     </div>
                     <a href="<?php echo esc_url(tsml_link_url(tsml_meetings_url(), 'tsml_meeting')) ?>">
-                        <em class="glyphicon glyphicon-chevron-right"></em>
+                        <?php tsml_icon('chevron-right') ?>
                         <?php esc_html_e('Back to Meetings', '12-step-meeting-list') ?>
                     </a>
                 </div>
@@ -67,8 +67,8 @@ tsml_header();
                     <div class="col-md-4">
 
                         <?php if (!in_array('TC', $meeting->types) && ($meeting->approximate !== 'yes')) { ?>
-                            <div class="panel panel-default">
-                                <a class="panel-heading tsml-directions" href="#"
+                            <div class="card">
+                                <a class="card-header tsml-directions" href="#"
                                     data-latitude="<?php echo esc_attr($meeting->latitude) ?>"
                                     data-longitude="<?php echo esc_attr($meeting->longitude) ?>"
                                     data-location="<?php echo esc_attr($meeting->location) ?>">
@@ -82,7 +82,7 @@ tsml_header();
                             </div>
                         <?php } ?>
 
-                        <div class="panel panel-default">
+                        <div class="card">
                             <ul class="list-group">
                                 <li class="list-group-item meeting-info">
                                     <h3 class="list-group-item-heading">
@@ -335,12 +335,12 @@ tsml_header();
                                 <input type="hidden" name="action" value="tsml_feedback">
                                 <input type="hidden" name="meeting_id" value="<?php echo esc_attr($meeting->ID) ?>">
                                 <?php wp_nonce_field($tsml_nonce, 'tsml_nonce', false) ?>
-                                <div class="panel panel-default panel-expandable">
-                                    <div class="panel-heading">
+                                <div class="card panel-expandable">
+                                    <div class="card-header">
                                         <h3 class="panel-title">
                                             <?php esc_html_e('Request a change to this listing', '12-step-meeting-list') ?>
                                             <span class="panel-title-buttons">
-                                                <span class="glyphicon glyphicon-chevron-left"></span>
+                                                <?php tsml_icon('chevron-left') ?>
                                             </span>
                                         </h3>
                                     </div>
@@ -378,9 +378,9 @@ tsml_header();
                     </div>
                     <div class="col-md-8">
                         <?php if ('online' === $meeting->attendance_option) { ?>
-                            <div class="panel panel-default panel-online"></div>
+                            <div class="card panel-online"></div>
                         <?php } ?>
-                        <div id="map" class="panel panel-default"></div>
+                        <div id="map" class="card"></div>
                     </div>
                 </div>
             </div>
