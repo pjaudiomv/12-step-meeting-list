@@ -11,3 +11,4 @@ docker-compose.yml
 *.map
 build/
 .phpunit.result.cache
+coverage/

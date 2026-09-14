@@ -175,6 +175,14 @@ To remove the test containers, images, and volumes:
 make test-clean
 ```
 
+### Code coverage
+
+```bash
+make coverage
+```
+
+Runs the suite with the PCOV driver, prints a coverage summary, and writes a browsable HTML report to `coverage/index.html` (gitignored).
+
 ### Linting
 
 PHP code style is checked with [PHP_CodeSniffer](https://github.com/PHPCSStandards/PHP_CodeSniffer) (PSR-12). Lint is currently scoped to the `tests/` directory; widen the `<file>` list in `.phpcs.xml` to bring more of the codebase under the standard over time.

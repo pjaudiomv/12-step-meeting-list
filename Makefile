@@ -73,6 +73,13 @@ test:  ## Run the PHPUnit suite in Docker (builds fresh each time)
 	docker compose -f docker-compose.test.yml up --build --abort-on-container-exit --exit-code-from test
 	docker compose -f docker-compose.test.yml down
 
+.PHONY: coverage
+coverage:  ## Run the suite in Docker with code coverage (text summary + HTML in coverage/)
+	docker compose -f docker-compose.test.yml run --rm --build \
+		-v "$(CURDIR)/coverage:/app/coverage" test \
+		--coverage-text --coverage-html coverage
+	docker compose -f docker-compose.test.yml down
+
 .PHONY: test-clean
 test-clean:  ## Remove test containers, images, and volumes
 	docker compose -f docker-compose.test.yml down --rmi local --volumes
