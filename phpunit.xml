@@ -9,16 +9,16 @@
 >
 	<testsuites>
 		<testsuite name="12-step-meeting-list">
-			<directory suffix=".php">./tests/</directory>
+			<directory suffix="Test.php">./tests/</directory>
 		</testsuite>
 	</testsuites>
+	<php>
+		<const name="WP_TESTS_PHPUNIT_POLYFILLS_PATH" value="vendor/yoast/phpunit-polyfills"/>
+	</php>
 	<coverage>
 		<include>
 			<directory suffix=".php">includes</directory>
 			<file>12-step-meeting-list.php</file>
 		</include>
 	</coverage>
-	<php>
-		<const name="WP_TESTS_PHPUNIT_POLYFILLS_PATH" value="vendor/yoast/phpunit-polyfills"/>
-	</php>
 </phpunit>

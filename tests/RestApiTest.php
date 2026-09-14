@@ -3,7 +3,7 @@
 /**
  * Tests for the REST feed endpoint in includes/rest.php.
  */
-class Test_Rest_Api extends WP_UnitTestCase
+class RestApiTest extends WP_UnitTestCase
 {
     public function test_restricted_feed_returns_403()
     {

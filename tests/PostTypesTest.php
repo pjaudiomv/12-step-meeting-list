@@ -3,7 +3,7 @@
 /**
  * Tests that the custom post types and taxonomies register correctly.
  */
-class Test_Post_Types extends WP_UnitTestCase
+class PostTypesTest extends WP_UnitTestCase
 {
     public function test_meeting_post_types_are_registered()
     {

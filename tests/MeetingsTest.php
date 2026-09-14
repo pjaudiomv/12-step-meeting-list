@@ -4,7 +4,7 @@
  * Integration tests: create real location + meeting posts and read them back
  * through tsml_get_meetings().
  */
-class Test_Meetings extends WP_UnitTestCase
+class MeetingsTest extends WP_UnitTestCase
 {
     private function create_meeting()
     {

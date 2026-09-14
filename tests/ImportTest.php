@@ -4,7 +4,7 @@
  * Tests for the CSV / feed import normalization in includes/functions_import.php.
  * These cover the pure transformation steps (no network / geocoding).
  */
-class Test_Import extends WP_UnitTestCase
+class ImportTest extends WP_UnitTestCase
 {
     public function test_reformat_googlesheet_maps_headers_to_keys()
     {

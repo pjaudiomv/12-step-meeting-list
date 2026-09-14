@@ -4,7 +4,7 @@
  * Tests for the sanitizing / string / timezone helpers in
  * includes/functions.php and includes/functions_timezone.php.
  */
-class Test_Helpers extends WP_UnitTestCase
+class HelpersTest extends WP_UnitTestCase
 {
     public function test_sanitize_url_rejects_non_http_schemes()
     {

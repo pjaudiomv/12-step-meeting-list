@@ -3,9 +3,9 @@
     "description": "12 Step Meeting List WordPress plugin",
     "license": "GPL-2.0-or-later",
     "require-dev": {
-        "squizlabs/php_codesniffer": "3.*",
+        "squizlabs/php_codesniffer": "^4.0",
         "phpunit/phpunit": "^9.6",
-        "wp-phpunit/wp-phpunit": "^6.8",
+        "wp-phpunit/wp-phpunit": "^7.1",
         "yoast/phpunit-polyfills": "^4.0"
     },
     "config": {

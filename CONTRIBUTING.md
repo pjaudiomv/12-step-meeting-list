@@ -194,10 +194,10 @@ make fmt    # auto-fix what can be fixed
 
 ### Writing tests
 
-Test files live in the `tests/` directory, prefixed with `test-` (e.g. `tests/test-feature.php`). Test cases extend `WP_UnitTestCase`, which provides a full WordPress environment with database access:
+Test files live in the `tests/` directory and are named `*Test.php`, with the class name matching the file name (e.g. `tests/FeatureTest.php` → `class FeatureTest`). Test cases extend `WP_UnitTestCase`, which provides a full WordPress environment with database access:
 
 ```php
-class Test_My_Feature extends WP_UnitTestCase
+class FeatureTest extends WP_UnitTestCase
 {
     public function test_something()
     {

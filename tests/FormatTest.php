@@ -3,7 +3,7 @@
 /**
  * Tests for the output formatting helpers in includes/functions_format.php.
  */
-class Test_Format extends WP_UnitTestCase
+class FormatTest extends WP_UnitTestCase
 {
     public function test_format_address_strips_usa_and_joins_state_zip()
     {
