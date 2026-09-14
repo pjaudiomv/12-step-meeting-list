@@ -157,6 +157,53 @@ Once WordPress and TSML are running:
 
 ---
 
+## Testing
+
+This project uses [PHPUnit](https://phpunit.de/) with the [WordPress test suite](https://github.com/wp-phpunit/wp-phpunit) for integration testing. Tests run inside Docker containers, so you don't need PHP or MySQL installed locally.
+
+### Running tests locally
+
+```bash
+make test
+```
+
+This builds a PHP container, spins up a MariaDB container, downloads WordPress core, and runs the full suite. Containers are cleaned up automatically afterward.
+
+To remove the test containers, images, and volumes:
+
+```bash
+make test-clean
+```
+
+### Linting
+
+PHP code style is checked with [PHP_CodeSniffer](https://github.com/PHPCSStandards/PHP_CodeSniffer) (PSR-12). Lint is currently scoped to the `tests/` directory; widen the `<file>` list in `.phpcs.xml` to bring more of the codebase under the standard over time.
+
+```bash
+make lint   # report style violations
+make fmt    # auto-fix what can be fixed
+```
+
+### Writing tests
+
+Test files live in the `tests/` directory, prefixed with `test-` (e.g. `tests/test-feature.php`). Test cases extend `WP_UnitTestCase`, which provides a full WordPress environment with database access:
+
+```php
+class Test_My_Feature extends WP_UnitTestCase
+{
+    public function test_something()
+    {
+        $this->assertTrue(post_type_exists('tsml_meeting'));
+    }
+}
+```
+
+### CI
+
+Tests and lint run automatically on every pull request against `main` (see `.github/workflows/pull-requests.yml`). PHPUnit runs on a PHP version matrix; both jobs must pass.
+
+---
+
 ## Releasing
 
 Releases are cut by pushing a version tag. The `release` GitHub Action then builds the
