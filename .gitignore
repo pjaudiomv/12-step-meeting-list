@@ -1,6 +1,7 @@
 .svn
 .sass-cache
 node_modules
+vendor
 .idea
 Dockerfile
 docker-compose.yml
@@ -9,3 +10,5 @@ docker-compose.yml
 .DS_Store
 *.map
 build/
+.phpunit.result.cache
+coverage/

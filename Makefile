@@ -53,10 +53,41 @@ build: $(ZIP_FILE)  ## Build the production plugin zip into build/
 version:  ## Print the plugin version
 	@echo $(VERSION)
 
+# Installed only when vendor is absent; run `make composer` to refresh it.
+vendor:
+	composer install --prefer-dist --no-progress --no-interaction
+
+.PHONY: composer
+composer: vendor  ## Install/refresh PHP (Composer) dependencies
+
+.PHONY: lint
+lint: | vendor  ## PHP lint (PHPCS, scoped to tests/)
+	vendor/bin/phpcs
+
+.PHONY: fmt
+fmt: | vendor  ## Auto-fix PHP code style (PHPCBF)
+	vendor/bin/phpcbf
+
+.PHONY: test
+test:  ## Run the PHPUnit suite in Docker (builds fresh each time)
+	docker compose -f docker-compose.test.yml up --build --abort-on-container-exit --exit-code-from test
+	docker compose -f docker-compose.test.yml down
+
+.PHONY: coverage
+coverage:  ## Run the suite in Docker with code coverage (text summary + HTML in coverage/)
+	docker compose -f docker-compose.test.yml run --rm --build \
+		-v "$(CURDIR)/coverage:/app/coverage" test \
+		--coverage-text --coverage-html coverage
+	docker compose -f docker-compose.test.yml down
+
+.PHONY: test-clean
+test-clean:  ## Remove test containers, images, and volumes
+	docker compose -f docker-compose.test.yml down --rmi local --volumes
+
 .PHONY: clean
 clean:  ## Remove build artifacts
 	rm -rf $(BUILD_DIR)
 
 .PHONY: distclean
-distclean: clean  ## Remove build artifacts and node_modules
-	rm -rf node_modules
+distclean: clean  ## Remove build artifacts, node_modules, and vendor
+	rm -rf node_modules vendor
